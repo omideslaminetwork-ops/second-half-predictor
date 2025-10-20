@@ -1,20 +1,17 @@
 import requests
 
-LIVE_URL = "https://api.sofascore.com/api/v1/sport/football/events/live"
+WORKER_URL = "https://sofa-relay.omideslami-network.workers.dev
 
-HEADERS = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-                  "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
-    "Accept": "application/json, text/plain, */*",
-    "Accept-Language": "en-US,en;q=0.9"
-}
+"  # آدرس Worker خودت
 
 def get_live_matches(debug=False):
     try:
-        r = requests.get(LIVE_URL, headers=HEADERS, timeout=10)
+        r = requests.get(WORKER_URL, timeout=12)
         status = r.status_code
+        text_head = r.text[:300] if r.text else ""
         if status != 200:
-            return [], {"status": status, "error": "non-200"}
+            return [], {"status": status, "error": "non-200", "response_head": text_head}
+
         data = r.json()
         events = data.get("events", [])
         matches = []
@@ -28,7 +25,7 @@ def get_live_matches(debug=False):
                 "time": ev.get("status", {}).get("description"),
                 "minute": ev.get("status", {}).get("minute")
             })
-        meta = {"status": status, "count": len(matches)}
+        meta = {"status": status, "count": len(matches), "response_head": text_head}
         return matches, meta
     except Exception as e:
         return [], {"status": "exception", "error": str(e)}
