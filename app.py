@@ -102,10 +102,10 @@ for ev in parsed:
             except Exception as e:
                 print("parse stats error", e)
 
-            # fallback simple fields
+       # fallback simple fields
             stats["home_goals"] = ev.get("home_score",0)
             stats["away_goals"] = ev.get("away_score",0)
-          stats["goal_minutes"] = []  # could be extracted from timeline
+            stats["goal_minutes"] = []  # could be extracted from timeline
             stats["competition_type"] = ev.get("tournament", "league")
             stats["has_live_broadcast"] = True
 
